@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model
 import seaborn as sns
+from statsmodels.graphics.gofplots import ProbPlot
+from sklearn.preprocessing import normalize
+import math
 
 data = np.loadtxt("Boston.data")
 
@@ -34,7 +37,7 @@ plt.ylabel("MEDV")
 
 # Residuals vs Fitted
 resVsFitted = plt.figure(2)
-resVsFitted.axes[0] = sns.residplot(regr.predict(xData), regr.predict(xData) + yData, 
+resVsFitted.axes[0] = sns.residplot(regr.predict(xData), yData - regr.predict(xData), 
                           lowess=True, 
                           scatter_kws={'alpha': 0.5}, 
                           line_kws={'color': 'red', 'lw': 1, 'alpha': 0.8})
@@ -42,9 +45,24 @@ resVsFitted.axes[0].set_title('Residuals vs Fitted')
 resVsFitted.axes[0].set_xlabel('Fitted values')
 resVsFitted.axes[0].set_ylabel('Residuals')
 
+#QQ Plot
+residuals = (yData - regr.predict(xData))
+standardized_residuals = residuals/np.std(residuals)
+QQ = ProbPlot(standardized_residuals)
+qqPlot = QQ.qqplot(line='45', alpha=0.5, color='#4C72B0', lw=1)
+qqPlot.axes[0].set_title('Normal Q-Q')
+qqPlot.axes[0].set_xlabel('Theoretical Quantiles')
+qqPlot.axes[0].set_ylabel('Standardized Residuals');
+# annotations
+abs_norm_resid = np.flip(np.argsort(np.abs(standardized_residuals)), 0)
+abs_norm_resid_top_3 = abs_norm_resid[:3]
+for r, i in enumerate(abs_norm_resid_top_3):
+    qqPlot.axes[0].annotate(i, 
+                               xy=(np.flip(QQ.theoretical_quantiles, 0)[r],
+                                   standardized_residuals[i]));
 
 #Risidual plot
-plt.figure(3)
+plt.figure(4)
 plt.scatter(regr.predict(xData), regr.predict(xData) + yData)
 #plt.scatter(regr.predict(xData), regr.predict(xData) - yData, c='b', s=40, alpha=0.5)
 plt.show()
