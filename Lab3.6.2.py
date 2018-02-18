@@ -35,9 +35,10 @@ plt.plot(xData, regr.predict(xData), color='blue', linewidth=3)
 plt.xlabel("LSTAT")
 plt.ylabel("MEDV")
 
+residuals = (yData - regr.predict(xData))
 # Residuals vs Fitted
 resVsFitted = plt.figure(2)
-resVsFitted.axes[0] = sns.residplot(regr.predict(xData), yData - regr.predict(xData), 
+resVsFitted.axes[0] = sns.residplot(regr.predict(xData), residuals, 
                           lowess=True, 
                           scatter_kws={'alpha': 0.5}, 
                           line_kws={'color': 'red', 'lw': 1, 'alpha': 0.8})
@@ -46,7 +47,6 @@ resVsFitted.axes[0].set_xlabel('Fitted values')
 resVsFitted.axes[0].set_ylabel('Residuals')
 
 #QQ Plot
-residuals = (yData - regr.predict(xData))
 standardized_residuals = residuals/np.std(residuals)
 QQ = ProbPlot(standardized_residuals)
 qqPlot = QQ.qqplot(line='45', alpha=0.5, color='#4C72B0', lw=1)
@@ -61,8 +61,28 @@ for r, i in enumerate(abs_norm_resid_top_3):
                                xy=(np.flip(QQ.theoretical_quantiles, 0)[r],
                                    standardized_residuals[i]));
 
+#Scale location plot
+model_std_residuals_abs_sqrt = np.sqrt(np.abs(standardized_residuals))
+SL_plot = plt.figure(4)
+plt.scatter(regr.predict(xData), model_std_residuals_abs_sqrt, alpha=0.5)
+sns.regplot(regr.predict(xData), model_std_residuals_abs_sqrt, 
+            scatter=False, 
+            ci=False, 
+            lowess=True,
+            line_kws={'color': 'red', 'lw': 1, 'alpha': 0.8})
+SL_plot.axes[0].set_title('Scale-Location')
+SL_plot.axes[0].set_xlabel('Fitted values')
+SL_plot.axes[0].set_ylabel('$\sqrt{|Standardized Residuals|}$');
+# annotations
+abs_sq_norm_resid = np.flip(np.argsort(model_std_residuals_abs_sqrt), 0)
+abs_sq_norm_resid_top_3 = abs_sq_norm_resid[:3]
+for i in abs_norm_resid_top_3:
+    SL_plot.axes[0].annotate(i, 
+                               xy=(regr.predict(xData)[i], 
+                                   model_std_residuals_abs_sqrt[i]));
+
 #Risidual plot
-plt.figure(4)
+plt.figure(6)
 plt.scatter(regr.predict(xData), regr.predict(xData) + yData)
 #plt.scatter(regr.predict(xData), regr.predict(xData) - yData, c='b', s=40, alpha=0.5)
 plt.show()
