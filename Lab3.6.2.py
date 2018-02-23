@@ -5,18 +5,44 @@ import seaborn as sns
 from statsmodels.graphics.gofplots import ProbPlot
 from sklearn.preprocessing import normalize
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets, linear_model
+import seaborn as sns
+from statsmodels.graphics.gofplots import ProbPlot
+from sklearn.preprocessing import normalize
+import math
+from sklearn import datasets
+import pandas as pd
+import numpy as np
+data = datasets.load_boston()
 
-data = np.loadtxt("Boston.data")
+df = pd.DataFrame(data.data, columns=data.feature_names)
 
-xData = []
-yData = []
-for item in data:
-    xData.append([item[12]]) # The LSTAT Column
-    yData.append(item[13]) # The MEDV Column
+target = pd.DataFrame(data.target, columns=["MEDV"])
+
+import statsmodels.api as sm
+
+xData = df[["LSTAT"]]
+yData = target["MEDV"]
+
+X = xData
+y = yData
+
+X = sm.add_constant(X)
+
+residual_model = sm.OLS(y, X).fit()
+predictions = residual_model.predict(X)
+
+print(residual_model.summary().tables[1])
+print("R^2: %f" % residual_model.rsquared)
+
+print("RSE: %f" % np.sqrt(residual_model.mse_resid))
 
 # Create linear regression object
 regr = linear_model.LinearRegression()
-model_fit = regr.fit(xData, yData)
+regr.fit(xData, yData)
+
 
 # Printing relevant values
 print('(Intercept):' , regr.intercept_)
@@ -28,6 +54,7 @@ print("Mean squared error: %.2f" % np.mean((regr.predict(xData) - yData) ** 2))
 # Explained variance score: 1 is perfect prediction
 print('Variance score: %.2f' % regr.score(xData, yData))
 
+xData = np.array(xData)
 # Plot outputs
 dataPlot = plt.figure(1)
 plt.scatter(xData, yData,  color='black')
@@ -46,7 +73,7 @@ resVsFitted.axes[0].set_title('Residuals vs Fitted')
 resVsFitted.axes[0].set_xlabel('Fitted values')
 resVsFitted.axes[0].set_ylabel('Residuals')
 
-#QQ Plot
+#QQ Plots
 standardized_residuals = residuals/np.std(residuals)
 QQ = ProbPlot(standardized_residuals)
 qqPlot = QQ.qqplot(line='45', alpha=0.5, color='#4C72B0', lw=1)
