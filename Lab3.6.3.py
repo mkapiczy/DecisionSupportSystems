@@ -1,21 +1,24 @@
+from sklearn import datasets
+import pandas as pd
 import numpy as np
-from sklearn import datasets, linear_model
+data = datasets.load_boston()
 
-boston = datasets.load_boston()
+df = pd.DataFrame(data.data, columns=data.feature_names)
 
-lm = linear_model.LinearRegression()
-boston_X_train = boston.data
-boston_X_test = boston.data
+target = pd.DataFrame(data.target, columns=["MEDV"])
 
-boston_Y_train = boston.target
-boston_Y_test = boston.target
+import statsmodels.api as sm
 
-lm.fit(boston_X_train, boston_Y_train)
+X = df[["LSTAT", "AGE", 'DIS']]
+y = target["MEDV"]
 
-# The coefficients
-print('Coefficients: \n', lm.coef_)
-# The mean squared error
-print("Mean squared error: %.2f"
-      % np.mean((lm.predict(boston_X_test) - boston_Y_test) ** 2))
-# Explained variance score: 1 is perfect prediction
-print('Variance score: %.2f' % lm.score(boston_X_test, boston_Y_test))
+X = sm.add_constant(X)
+
+residual_model = sm.OLS(y, X).fit()
+predictions = residual_model.predict(X)
+
+print(residual_model.summary().tables[1])
+print("R^2: %f" % residual_model.rsquared)
+
+print("RSE: %f" % np.sqrt(residual_model.mse_resid))
+
