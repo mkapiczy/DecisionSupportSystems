@@ -4,7 +4,7 @@ from sklearn import linear_model
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
-data = pd.read_csv('Smarket.csv', usecols = range(1,10))
+data = pd.read_csv('datasets/Smarket.csv', usecols = range(1,10))
 
 # To get the values to fit the answer
 for x in range(0, data.Direction.size):

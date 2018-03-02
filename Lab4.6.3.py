@@ -7,7 +7,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 
-data = pd.read_csv('Smarket.csv', usecols = range(1,10), parse_dates=True)
+data = pd.read_csv('datasets/Smarket.csv', usecols = range(1,10), parse_dates=True)
 
 x_train = data[0:sum(data.Year<2005)][['Lag1', 'Lag2']]
 y_train = data[0:sum(data.Year<2005)]['Direction']
