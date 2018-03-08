@@ -12,7 +12,7 @@ target = pd.DataFrame(data.target, columns=["MEDV"])
 
 import statsmodels.api as sm
 
-X = df[["TAX", "NOX"]]
+X = df[["CRIM", "ZN", "CHAS", "NOX", "RM", "DIS", "RAD", "TAX", "PTRATIO", "B", "LSTAT" ]]
 y = target["MEDV"]
 
 X = sm.add_constant(X)
