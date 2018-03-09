@@ -5,7 +5,6 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
-*.csv
 *.DS_Store
 ### https://raw.github.com/github/gitignore/14b7566ce157ce95b07006466bacee160f242284/maven.gitignore
 # Byte-compiled / optimized / DLL files
