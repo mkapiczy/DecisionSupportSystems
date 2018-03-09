@@ -24,7 +24,7 @@ y_pred = regr.predict(X_test)
 MSE = mean_squared_error(y_test, y_pred)
 print ('MSE for linear regression using mpg and horsepower is:', MSE)
 
-# # Split data into train and test
+# Fit, predict and calculate mean squared error for polynomial regression
 for i in range(0,4):
   pipeline = Pipeline([
       ('poly', PolynomialFeatures(degree=i+2)),
