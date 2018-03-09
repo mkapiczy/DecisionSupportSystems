@@ -2,24 +2,36 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=RuntimeWarning)
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from sklearn import linear_model
-import pandas as pd
-import statsmodels.formula.api as smf
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
 
 data = pd.read_csv('datasets/Auto.csv')
 # Extract columns and reshape np array to use with LinearRegression Fit
-x = data['mpg'].values.reshape(-1, 1)
-y = data['horsepower'].values.reshape(-1, 1)
+x = data['horsepower'].values.reshape(-1, 1)
+y = data['mpg'].values.reshape(-1, 1)
 
 # Split data into train and test
-X_train, X_test, y_train, y_test = train_test_split(x,y,train_size=0.50,random_state=1)
+X_train, X_test, y_train, y_test = train_test_split(x,y,train_size=0.50,random_state=2)
 
-# Fit, predict and calculate mean squared error
-regr = linear_model.LinearRegression()
+# Fit, predict and calculate mean squared error for linear regression
+regr = LinearRegression()
 regr.fit(X_train, y_train)
 y_pred = regr.predict(X_test)
 MSE = mean_squared_error(y_test, y_pred)
+print ('MSE for linear regression using mpg and horsepower is:', MSE)
 
-print ('MSE for mpg and horsepower is: ', MSE)
+# # Split data into train and test
+for i in range(0,4):
+  pipeline = Pipeline([
+      ('poly', PolynomialFeatures(degree=i+2)),
+      ('linreg', LinearRegression())
+      ])
+
+  pipeline.fit(X_train, y_train)
+  y_pred = pipeline.predict(X_test)
+  MSE = mean_squared_error(y_test, y_pred)
+  print ('MSE for polynomial regression with degree', i+2, 'using mpg and horsepower is:', MSE)
