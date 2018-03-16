@@ -17,13 +17,14 @@ regr = LinearRegression()
 regr.fit(x, y)
 
 print("Coeffecients: %.2f" % regr.coef_)
+#K fold cross validation strategy
+knn = KFold(n_splits=x.shape[0])
 
-#Running cross_val_score for polynomial with different degrees
+# Fit, predict and calculate mean squared error for polynomial regression for order degree 1-10
 for i in range(0,10):
-    poly = PolynomialFeatures(degree=i+1)
-    X_train_poly = poly.fit_transform(x)
-    lm = linear_model.LinearRegression()
-    # Do K-fold cross validation
-    k_fold = KFold(n_splits=x.shape[0]) 
-    score = cross_val_score(lm, X_train_poly, y, cv=k_fold, scoring = 'neg_mean_squared_error')
-    print ('MSE for order:', i+1, score.mean())
+      poly = PolynomialFeatures(degree=i+1)
+      x_current = poly.fit_transform(x)
+      model = regr.fit(x_current, y)
+      #Score using leave one out as split strategy
+      score = cross_val_score(model, x_current, y, cv=knn, scoring="neg_mean_squared_error")
+      print ('MSE for order:', i+1, score.mean())
