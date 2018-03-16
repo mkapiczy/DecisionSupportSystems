@@ -27,3 +27,12 @@ y_predict = knn.predict(x_test)
 print("Classification Report for k=3")
 print(classification_report(y_test, y_predict, digits=3))
 print(pd.DataFrame(confusion_matrix(y_test, y_predict).T,['Down', 'Up'], ['Down', 'Up']))
+
+#n = 5
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(x_train,y_train)
+
+y_predict = knn.predict(x_test)
+print("Classification Report for k=3")
+print(classification_report(y_test, y_predict, digits=3))
+print(pd.DataFrame(confusion_matrix(y_test, y_predict).T,['Down', 'Up'], ['Down', 'Up']))
