@@ -86,4 +86,4 @@ plt.plot(bic.idxmin(), bic.min(), "xr")
 plt.xlabel('Number of predictors')
 plt.ylabel('BIC')
 
-plt.savefig('validationSet.png', dpi=200)
+#plt.savefig('validationSet.png', dpi=200)
