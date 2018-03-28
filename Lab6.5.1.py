@@ -51,8 +51,8 @@ def getBest(k):
 
 models = pd.DataFrame(columns=["RSS", "model"])
 
-# Do best subset selection for k=1,2, ... ,10:
-for i in range(1, 10):
+# Do best subset selection for k=1,2, ... ,p:
+for i in range(1, 15):
     models.loc[i]=getBest(i)
 
 #print(models.loc[2, "model"].summary())
@@ -62,6 +62,7 @@ plt.rcParams.update({'font.size': 18, 'lines.markersize': 10})
 
 plt.subplot(2, 2, 1)
 plt.plot(models["RSS"])
+plt.plot(models["RSS"].idxmin(), models["RSS"].min(), "xr")
 plt.xlabel('Number of predictors')
 plt.ylabel('RSS')
 
