@@ -15,7 +15,7 @@ def calc_alpha(X,Y):
 
 #bootstrap function using 1000 repetitions
 def bootstrap(data):
-    N_rep = 1000;
+    N_rep = 1000
     total_alpha = 0
     alphaMeans = []
     for i in range(0,N_rep):
