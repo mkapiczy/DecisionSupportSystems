@@ -26,6 +26,7 @@ plt.show()
 
 # To determine the cluster labels for each observation associated with a given cut of the dendrogram, we can use the cut_tree() function
 from scipy.cluster.hierarchy import cut_tree
+print('Complete linkage')
 print(cut_tree(hc_complete, n_clusters = 2).T)
 
 # We can just as easily perform hierarchical clustering with average linkage instead
@@ -42,6 +43,9 @@ dendrogram(
 )
 plt.show()
 
+print('Average linkage')
+print(cut_tree(hc_average, n_clusters = 2).T)
+
 # We can just as easily perform hierarchical clustering with single linkage instead
 hc_single = linkage(X, "single")
 
@@ -56,5 +60,7 @@ dendrogram(
     leaf_font_size=8.,  # font size for the x axis labels
 )
 plt.show()
+print('Single linkage')
+print(cut_tree(hc_single, n_clusters = 2).T)
 
 # For this data, complete and average linkage generally separates the observations into their correct groups
